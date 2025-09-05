@@ -2,6 +2,37 @@
 'title' => 'List' ,
 ])
 
+@section('header')
+<search>
+    <form action="{{ route('shops.list') }}" method="get" class="app-cmp-search-form">
+        <div class="app-cmp-form-detail">
+            <label for="app-criteria-term">Search</label>
+            <input type="text" id="app-criteria-term" name="term" value="{{ $criteria['term'] }}" />
+
+        </div>
+
+        <div class="app-cmp-form-actions">
+            <button type="submit" class="primary">Search</button>
+            <a href="{{ route('shops.list') }}">
+                <button type="button" class="accent">X</button>
+            </a>
+        </div>
+    </form>
+</search>
+
+<div class="app-cmp-links-bar">
+    <nav>
+        <ul class="app-cmp-links">
+            <li>
+                <a href="{{ route('shops.create-form') }}">New Shop</a>
+            </li>
+        </ul>
+    </nav>
+
+    {{ $shops->withQueryString()->links() }}
+</div>
+@endsection
+
 @section('content')
 <table class="app-cmp-data-list">
     <thead>
