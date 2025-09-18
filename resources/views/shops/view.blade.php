@@ -1,37 +1,58 @@
 @extends('shops.main', [
     'title' => $shop->code,
+    'titleClasses' => ['app-cl-code'],
 ])
- 
-@section('content')
-    <form action="{{ route('shops.update', [
-        'shop' => $shop->code,
-    ]) }}" method="post">
+@section('header')
+<nav>
+    <form action="{{ route('shops.delete', [
+            'shop' => $shop->code,
+        ]) }}" method="post"
+        id="app-form-delete">
         @csrf
- 
-        <div class="app-cmp-form-detail">
-            <label for="app-inp-code">Code</label>
-            <input type="text" id="app-inp-code" name="code" required  value="{{$shop->code}}"/>
- 
-            <label for="app-inp-name">Name</label>
-            <input type="text" id="app-inp-name" name="name" required  value="{{$shop->name}}" />
- 
-             <label for="app-inp-owner">Owner</label>
-            <input type="text" id="app-inp-owner" name="owner"  required value="{{$shop->owner}}"/>
- 
-             <label for="app-inp-latitude">Latitude</label>
-            <input id="app-inp-latitude" name="latitude" required value="{{$shop->latitude}}"/>
- 
-            <label for="app-inp-longitude">Longitude</label>
-            <input id="app-inp-longitude" name="longitude" required value="{{$shop->longitude}}"/>
- 
-            <label for="app-inp-adress">Address</label>
-            <textarea id="app-inp-address" name="address" cols="80" rows="10" required>{{ $shop->address }}</textarea>
- 
-         
-        </div>
- 
-        <div class="app-cmp-form-actions">
-            <button type="submit">Update</button>
-        </div>
     </form>
+
+    <ul class="app-cmp-links">
+        <li><a href="{{ route('shops.view-products', [
+'shop' => $shop->code,
+]) }}">View Products</a></li>
+        <li>
+        <li>
+            <a
+                href="{{ route('shops.update-form', [
+                        'shop' => $shop->code,
+                    ]) }}">Update</a>
+        </li>
+        <li class="app-cl-warn">
+            <button type="submit" form="app-form-delete" class="app-cl-link">Delete</button>
+        </li>
+    </ul>
+</nav>
+@endsection
+@section('content')
+    <dl class="app-cmp-data-detail">
+        <dt>Code</dt>
+       <dd>
+    <span class="app-cl-code">{{ $shop->code }}</span>
+</dd>
+
+        <dt>Name</dt>
+        <dd>
+            {{ $shop->name }}
+        </dd>
+
+        <dt>Owner</dt>
+        <dd>
+            {{ $shop->owner }}
+        </dd>
+        <dt>Location</dt>
+        <dd>
+            {{ $shop->latitude }}, {{ $shop->longitude }}
+        </dd>
+        <dt>Address</dt>
+        <dd>
+           {{$shop->address}}
+        
+        </dd>
+    </dl>
+
 @endsection

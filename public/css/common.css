@@ -38,7 +38,7 @@ input[type="number"] {
 .app-cl-code {
     color: var(--app-primary-color);
     font-family: monospace;
-    font-weight: bold;
+    font-weight: bold;    
 }
 
 .app-cl-options-row {
@@ -266,4 +266,5 @@ dl.app-cmp-data-detail > dt:not(:empty)::after {
             }
         }
     }
+    
 }

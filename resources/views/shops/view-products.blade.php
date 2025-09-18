@@ -1,11 +1,15 @@
-@extends('products.main', [
-    'title' => 'List',
+@extends('shops.main', [
     'mainClasses' => ['app-ly-max-width'],
+    'title' => "$shop->code ",
+    'titleClasses'=> ['app-cl-code'],
+    'subTitle'=> 'Products',
+    'subTitleClasses' => ['app-cl-sub-title'],
 ])
-
 @section('header')
     <search>
-        <form action="{{ route('products.list') }}" method="get" class="app-cmp-search-form">
+        <form action="{{ route('shops.view-products' , ['shop' => $shop->code,])  }}" method="get" class="app-cmp-search-form">
+       
+
             <div class="app-cmp-form-detail">
                 <label for="app-criteria-term">Search</label>
                 <input type="text" id="app-criteria-term" name="term" value="{{ $criteria['term'] }}" />
@@ -21,21 +25,20 @@
 
             <div class="app-cmp-form-actions">
                 <button type="submit" class="primary">Search</button>
-                <a href="{{ route('products.list') }}">
+                <a href="{{ route('shops.list') }}">
                     <button type="button" class="accent">X</button>
                 </a>
             </div>
         </form>
     </search>
 
-   <div class="app-cmp-links-bar">
+    <div class="app-cmp-links-bar">
     <nav>
         <ul class="app-cmp-links">
-            <li>
-                <a href="{{ route('products.create-form') }}">New Product</a>
-            </li>
+            <li><a href="{{ route('shops.view', ['shop' => $shop->code,]) }}">&lt; Back</a></li>
         </ul>
     </nav>
+
     {{ $products->withQueryString()->links() }}
 </div>
 @endsection
@@ -47,10 +50,10 @@
         </colgroup>
 
         <thead>
-            <tr>
+             <tr>
                 <th>Code</th>
                 <th>Name</th>
-                <th>category</th>
+                <th>Category</th>
                 <th>Price</th>
                 <th>No. of Shops</th>
             </tr>
@@ -69,16 +72,16 @@
                     </td>
                     <td>{{ $product->name }}</td>
                      <td>
-                        @if($product->category)
-                <a href="{{ route('categories.view', ['category' => $product->category->code]) }}">
-                    {{ $product->category->name }}
-                </a>
-            @else
-                N/A
-            @endif
-                     </td>
+                        @if ($product->category)
+                            <a href="{{ route('categories.view', ['category' => $product->category->code]) }}">
+                                {{ $product->category->name }}
+                            </a>
+                        @else
+                            N/A
+                        @endif
+                    </td>
                     <td class="app-cl-number">{{ number_format($product->price, 2) }}</td>
-                    
+                     
                      <td class="app-cl-number">{{number_format($product->shops_count, 0) }}</td>
                 </tr>
             @endforeach

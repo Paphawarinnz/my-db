@@ -4,12 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 abstract class SearchableController extends Controller
 {
     abstract function getQuery(): Builder;
-
     function prepareCriteria(array $criteria): array
     {
         return [
@@ -23,35 +22,39 @@ abstract class SearchableController extends Controller
         $query
             ->orwhere('code', 'LIKE', "%{$word}%")
             ->orWhere('name', 'LIKE', "%{$word}%");
+            
     }
-
-    function filterByTerm(Builder $query, ?string $term): Builder
+    function filterByTerm(
+Builder|Relation $query,
+?string $term,
+) : Builder|Relation
     {
-        if (!empty($term)) {
+        if($term !== null)
+        {
             foreach (\preg_split('/\s+/', \trim($term)) as $word) {
-                $query->where(function (Builder $innerQuery) use ($word) {
+                $query->where(function(Builder $innerQuery) use ($word) {
                     $this->applyWhereToFilterByTerm($innerQuery, $word);
                 });
             }
         }
-
+/**ไม่ใช่static เพราะ this  และ ไม่สามารถใช้ตัวแปรนอกฟังชันได้ จึงต้อง use */ 
         return $query;
     }
 
-    function filter(Builder $query, array $criteria): Builder
-    {
-        return $this->filterByTerm($query, $criteria['term']);
-    }
+    function filter(
+Builder|Relation $query,
+array $criteria,
+) : Builder|Relation {
+return $this->filterByTerm($query, $criteria['term']);
+}
 
-    function search(array $criteria): Builder
-    {
-        $query = $this->getQuery();
-        return $this->filter($query, $criteria);
-    }
 
-    // For easily searching by code.
-    function find(string $code): Model
-    {
-        return $this->getQuery()->where('code', $code)->firstOrFail();
-    }
+function search(array $criteria) : Builder {
+$query = $this->getQuery();/* จาก abstract    abstract function getQuery(): Builder;*/
+return $this->filter($query, $criteria);
+}
+// For easily searching by code.
+function find(string $code): Model {
+return $this->getQuery()->where('code', $code)->firstOrFail();
+}
 }
